@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const { Schema } = mongoose;
 
@@ -6,7 +7,6 @@ const UserSchema = new Schema({
   userName: {
     type: String,
     required: true,
-    unique: true,
   },
 
   password: {
@@ -17,6 +17,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
 
   joinDate: {
@@ -28,6 +29,24 @@ const UserSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: "Recipe",
   },
+});
+
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  bcrypt.genSalt(12, (err, salt) => {
+    if (err) {
+      return next();
+    }
+    bcrypt.hash(this.password, salt, (err, hash) => {
+      if (err) {
+        return next();
+      }
+      this.password = hash;
+      next();
+    });
+  });
 });
 
 module.exports = mongoose.model("User", UserSchema);
