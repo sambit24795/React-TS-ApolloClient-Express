@@ -1,0 +1,9 @@
+query Recipies {
+  recipies {
+    _id
+    name
+    userName
+    category
+    description
+  }
+}

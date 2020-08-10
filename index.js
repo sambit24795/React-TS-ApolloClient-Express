@@ -2,10 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const fs = require("fs");
+const cors = require("cors");
 
 require("dotenv").config({ path: "./variables.env" });
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost/3000",
+    credentials: true,
+  })
+);
 
 const Recipe = require("./Models/Recipe.js");
 const User = require("./Models/User");

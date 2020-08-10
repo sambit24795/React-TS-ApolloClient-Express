@@ -19,6 +19,7 @@ type Recipe {
 }
 
 type User {
+  _id: ID
   userName: String!
   password: String!
   email: String!
