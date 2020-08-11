@@ -3,10 +3,13 @@ const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const fs = require("fs");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config({ path: "./variables.env" });
 
 const app = express();
+
+app.use(bodyparser.urlencoded({ extended: true }));
 
 app.use(
   cors({
@@ -14,6 +17,20 @@ app.use(
     credentials: true,
   })
 );
+
+//* jwt varification
+app.use(async (req, res, next) => {
+  const token = req.headers["authorization"];
+  if (token !== "null") {
+    try {
+      const currUser = await jwt.verify(token, process.env.SECRET_KEY);
+      req.currentUser = currUser;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  next();
+});
 
 const Recipe = require("./Models/Recipe.js");
 const User = require("./Models/User");

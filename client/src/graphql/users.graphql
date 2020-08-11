@@ -3,3 +3,9 @@ mutation SignupUser($input: SignupUserInput) {
     token
   }
 }
+
+mutation SigninUser($input: SigninUserInput) {
+  SigninUser(input: $input) {
+    token
+  }
+}

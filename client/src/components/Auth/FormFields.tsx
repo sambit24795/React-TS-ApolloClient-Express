@@ -6,7 +6,7 @@ import {
   FormHelperText,
 } from "@material-ui/core";
 
-import { SignupAction, FIELD_CHANGE } from "./reducer";
+import { AuthAction, FIELD_CHANGE } from "./reducer";
 
 export interface FormField {
   type: string;
@@ -17,7 +17,7 @@ export interface FormField {
 }
 
 interface FormfieldProps extends FormField {
-  dispatch: React.Dispatch<SignupAction>;
+  dispatch: React.Dispatch<AuthAction>;
 }
 
 const FormFields: React.FC<FormfieldProps> = ({

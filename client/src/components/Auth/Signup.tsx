@@ -5,14 +5,9 @@ import { Alert } from "@material-ui/lab";
 import "./Auth.css";
 import FormFields, { FormField } from "./FormFields";
 import { useSignupUserMutation } from "../../generated/graphql";
-import {
-  FIELD_RESET,
-  signupReducer,
-  SignupState,
-  SignupAction,
-} from "./reducer";
+import { FIELD_RESET, AuthState, AuthAction, authReducer } from "./reducer";
 
-export const initialState: SignupState = {
+export const initialState: AuthState = {
   userName: "",
   email: "",
   password: "",
@@ -20,9 +15,10 @@ export const initialState: SignupState = {
 };
 
 const Signup: React.FC = (): JSX.Element => {
-  const [state, dispatch] = useReducer<
-    React.Reducer<SignupState, SignupAction>
-  >(signupReducer, initialState);
+  const [state, dispatch] = useReducer<React.Reducer<AuthState, AuthAction>>(
+    authReducer,
+    initialState
+  );
 
   const { userName, email, password, passwordConfirmation } = state;
 
@@ -86,11 +82,11 @@ const Signup: React.FC = (): JSX.Element => {
 
   const submitHandler = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  ): Promise<void> => {
     if (!validateForm()) {
       return;
     }
-    const tokenData = await signupUser({
+    const { data } = await signupUser({
       variables: {
         input: {
           email,
@@ -99,7 +95,10 @@ const Signup: React.FC = (): JSX.Element => {
         },
       },
     });
-    if (tokenData) {
+
+    localStorage.setItem("token", data?.signupUser?.token as string);
+
+    if (data) {
       dispatch({ type: FIELD_RESET });
     }
   };
