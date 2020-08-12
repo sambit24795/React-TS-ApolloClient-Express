@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const User = require("../Models/User");
 
@@ -11,7 +11,7 @@ const createToken = ({ userName, email }) => {
 
 exports.signupUser = async ({ userName, email, password }) => {
   const user = await User.findOne({ userName, email });
-  
+
   if (user) {
     throw new Error("User already exists!");
   }
@@ -28,19 +28,25 @@ exports.signupUser = async ({ userName, email, password }) => {
   }
 };
 
-exports.signinUser = async ({email, password}) => {
-
+exports.signinUser = async ({ email, password }) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error('User not found!');
+    throw new Error("User not found!");
   }
 
   const doMatch = await bcrypt.compare(password, user.password);
 
   if (!doMatch) {
-    throw new Error('Invalid Password');
+    throw new Error("Invalid Password");
   }
 
   return createToken(user);
+};
+
+exports.getCurrentUser = async ({ userName, email }) => {
+  return await User.findOne({ userName, email }).populate({
+    path: "favorites",
+    model: "Recipe",
+  });
 };

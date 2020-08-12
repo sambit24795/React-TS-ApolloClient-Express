@@ -17,7 +17,7 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   recipies?: Maybe<Array<Maybe<Recipe>>>;
-  users?: Maybe<Array<Maybe<User>>>;
+  user?: Maybe<User>;
 };
 
 export type Recipe = {
@@ -105,6 +105,17 @@ export type RecipiesQuery = (
   )>>> }
 );
 
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentUserQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'userName' | 'email' | 'joinDate'>
+  )> }
+);
+
 export type SignupUserMutationVariables = Exact<{
   input?: Maybe<SignupUserInput>;
 }>;
@@ -168,6 +179,40 @@ export function useRecipiesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type RecipiesQueryHookResult = ReturnType<typeof useRecipiesQuery>;
 export type RecipiesLazyQueryHookResult = ReturnType<typeof useRecipiesLazyQuery>;
 export type RecipiesQueryResult = ApolloReactCommon.QueryResult<RecipiesQuery, RecipiesQueryVariables>;
+export const CurrentUserDocument = gql`
+    query currentUser {
+  user {
+    userName
+    email
+    joinDate
+  }
+}
+    `;
+
+/**
+ * __useCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CurrentUserQuery, CurrentUserQueryVariables>) {
+        return ApolloReactHooks.useQuery<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, baseOptions);
+      }
+export function useCurrentUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CurrentUserQuery, CurrentUserQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CurrentUserQuery, CurrentUserQueryVariables>(CurrentUserDocument, baseOptions);
+        }
+export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
+export type CurrentUserLazyQueryHookResult = ReturnType<typeof useCurrentUserLazyQuery>;
+export type CurrentUserQueryResult = ApolloReactCommon.QueryResult<CurrentUserQuery, CurrentUserQueryVariables>;
 export const SignupUserDocument = gql`
     mutation SignupUser($input: SignupUserInput) {
   signupUser(input: $input) {

@@ -1,6 +1,6 @@
 type Query {
   recipies: [Recipe]
-  users: [User]
+  user: User
 }
 
 type Mutation {

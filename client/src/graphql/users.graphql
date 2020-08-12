@@ -1,3 +1,11 @@
+query currentUser {
+  user{
+    userName,
+  	email,
+    joinDate
+  }
+}
+
 mutation SignupUser($input: SignupUserInput) {
   signupUser(input: $input) {
     token

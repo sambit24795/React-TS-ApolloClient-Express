@@ -1,10 +1,12 @@
 import React, { useReducer, ReactNode } from "react";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import { FormGroup, FormControl, Button } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
 import FormFields, { FormField } from "./FormFields";
 import { AuthState, AuthAction, authReducer, FIELD_RESET } from "./reducer";
 import { useSigninUserMutation } from "../../generated/graphql";
+import { RefetchProp } from "../Hoc/withSession";
 
 export const initialState: SigninState = {
   email: "",
@@ -16,7 +18,9 @@ interface SigninState {
   password: string;
 }
 
-const Signin: React.FC = (): JSX.Element => {
+interface Props extends RefetchProp, RouteComponentProps {}
+
+const Signin = ({ history, refetch }: Props): JSX.Element => {
   const [state, dispatch] = useReducer<React.Reducer<AuthState, AuthAction>>(
     authReducer,
     initialState
@@ -71,12 +75,15 @@ const Signin: React.FC = (): JSX.Element => {
       },
     });
 
+    localStorage.clear();
     localStorage.setItem("token", data?.SigninUser?.token as string);
 
     if (data) {
+      await refetch();
       dispatch({
         type: FIELD_RESET,
       });
+      history.push("/");
     }
   };
 
@@ -105,4 +112,4 @@ const Signin: React.FC = (): JSX.Element => {
   );
 };
 
-export default Signin;
+export default withRouter(Signin);

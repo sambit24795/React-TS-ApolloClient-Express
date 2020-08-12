@@ -1,5 +1,5 @@
 const { addRecipe, getRecipes } = require("../controllers/recipe");
-const { signupUser, createtoken, signinUser } = require("../controllers/user");
+const { signupUser, signinUser, getCurrentUser } = require("../controllers/user");
 
 const Query = {
   recipies: async () => {
@@ -9,6 +9,17 @@ const Query = {
       console.error(err);
     }
   },
+  user: async (...[, , { currentUser }]) => {
+    if(!currentUser) {
+      return null;
+    }
+    console.log('CURRENT', currentUser);
+    try {
+      return await getCurrentUser(currentUser);
+    } catch(err) {
+      console.error(err);
+    }
+  }
 };
 
 const Mutation = {
@@ -27,7 +38,8 @@ const Mutation = {
       console.error(err);
     }
   },
-  SigninUser: async (_, { input }) => {
+  SigninUser: async (_, { input }, context) => {
+    console.log('CONTEXT:', context);
     try {
       const token = await signinUser(input);
       return { token };
