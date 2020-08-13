@@ -17,6 +17,7 @@ import * as serviceWorker from "./serviceWorker";
 import Signin from "./components/Auth/Signin";
 import Signup from "./components/Auth/Signup";
 import withSession, { RefetchProp } from "./components/Hoc/withSession";
+import Navbar from "./components/Navbar/Navbar";
 
 const httpLink: HttpLink = new HttpLink({
   uri: "http://localhost:4000/graphql",
@@ -53,6 +54,7 @@ interface Props extends RefetchProp {}
 
 const Root: React.FC<Props> = ({ refetch }): JSX.Element => (
   <BrowserRouter>
+    <Navbar />
     <Switch>
       <Route path="/signin" exact render={() => <Signin refetch={refetch} />} />
       <Route path="/signup" exact render={() => <Signup refetch={refetch} />} />

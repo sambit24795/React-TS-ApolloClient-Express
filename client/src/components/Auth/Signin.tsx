@@ -89,8 +89,8 @@ const Signin = ({ history, refetch }: Props): JSX.Element => {
 
   return (
     <div className="App">
+      <FormGroup className="AuthForm Signin">
       <h2>Signin</h2>
-      <FormGroup className="AuthForm">
         {renderSigninFormfields()}
         <FormControl margin="dense">
           <Button

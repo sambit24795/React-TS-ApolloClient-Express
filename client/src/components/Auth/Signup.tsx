@@ -112,8 +112,8 @@ const Signup = ({ history, refetch }: Props): JSX.Element => {
 
   return (
     <div className="App">
-      <h2>Signup</h2>
       <FormGroup className="AuthForm">
+        <h2>Signup</h2>
         {renderSignupFormfields()}
         <FormControl margin="dense">
           <Button
