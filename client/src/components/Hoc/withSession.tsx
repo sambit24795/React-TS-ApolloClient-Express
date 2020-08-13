@@ -4,15 +4,16 @@ import { ApolloQueryResult } from "@apollo/client/core/types";
 
 export interface RefetchProp {
   refetch: () => Promise<ApolloQueryResult<CurrentUserQuery>>;
+  userData: CurrentUserQuery | null;
 }
 
 const withSession = <P extends RefetchProp>(
   Component: React.ComponentType<P>
 ) => {
   return (props: P) => {
-    const { loading, refetch } = useCurrentUserQuery();
+    const { loading, refetch, data } = useCurrentUserQuery();
     if (loading) return null;
-    return <Component {...props} refetch={refetch} />;
+    return <Component {...props} refetch={refetch} userData={data} />;
   };
 };
 

@@ -1,6 +1,6 @@
 import React, { useReducer, ReactNode } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { Button, FormGroup, FormControl } from "@material-ui/core";
+import { Button, FormGroup, FormControl, Typography } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
 import "./Auth.css";
@@ -16,9 +16,11 @@ export const initialState: AuthState = {
   passwordConfirmation: "",
 };
 
-interface Props extends RefetchProp, RouteComponentProps {}
+type Ommitedprops = Omit<RefetchProp, "userData">;
 
-const Signup = ({ history, refetch }: Props): JSX.Element => {
+interface Props extends Ommitedprops, RouteComponentProps {}
+
+const Signup: React.FC<Props> = ({ history, refetch }): JSX.Element => {
   const [state, dispatch] = useReducer<React.Reducer<AuthState, AuthAction>>(
     authReducer,
     initialState
@@ -112,8 +114,8 @@ const Signup = ({ history, refetch }: Props): JSX.Element => {
 
   return (
     <div className="App">
-      <FormGroup className="AuthForm">
-        <h2>Signup</h2>
+      <FormGroup className="AuthForm header">
+      <Typography variant="h4">Signup</Typography>
         {renderSignupFormfields()}
         <FormControl margin="dense">
           <Button

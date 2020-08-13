@@ -1,7 +1,15 @@
 import React, { useReducer, ReactNode } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { FormGroup, FormControl, Button } from "@material-ui/core";
+import {
+  FormGroup,
+  FormControl,
+  Button,
+  Chip,
+  Typography,
+} from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import FaceIcon from "@material-ui/icons/Face";
+import DoneIcon from "@material-ui/icons/Done";
 
 import FormFields, { FormField } from "./FormFields";
 import { AuthState, AuthAction, authReducer, FIELD_RESET } from "./reducer";
@@ -18,7 +26,9 @@ interface SigninState {
   password: string;
 }
 
-interface Props extends RefetchProp, RouteComponentProps {}
+type Ommitedprops = Omit<RefetchProp, "userData">;
+
+interface Props extends Ommitedprops, RouteComponentProps {}
 
 const Signin = ({ history, refetch }: Props): JSX.Element => {
   const [state, dispatch] = useReducer<React.Reducer<AuthState, AuthAction>>(
@@ -46,6 +56,13 @@ const Signin = ({ history, refetch }: Props): JSX.Element => {
       value: password,
     },
   ];
+
+  const validateForm = (): boolean => {
+    if (password || !email) {
+      return false;
+    }
+    return true;
+  };
 
   const renderSigninFormfields = (): ReactNode => {
     return formFields.map(
@@ -87,20 +104,36 @@ const Signin = ({ history, refetch }: Props): JSX.Element => {
     }
   };
 
+  const clickHandler = () => {
+    history.push("/signup");
+  };
+
   return (
     <div className="App">
-      <FormGroup className="AuthForm Signin">
-      <h2>Signin</h2>
+      <FormGroup className="AuthForm header">
+        <Typography variant="h4">Signin</Typography>
         {renderSigninFormfields()}
         <FormControl margin="dense">
           <Button
             variant="outlined"
             color="primary"
             onClick={submitHandler}
-            disabled={loading}
+            disabled={loading || validateForm()}
           >
             Submit
           </Button>
+        </FormControl>
+        <Typography variant="h6">Don't have an account yet?</Typography>
+        <FormControl margin="dense">
+          <Chip
+            icon={<FaceIcon />}
+            label="Signup"
+            clickable
+            color="primary"
+            onClick={clickHandler}
+            variant="outlined"
+            deleteIcon={<DoneIcon />}
+          />
         </FormControl>
       </FormGroup>
       {error ? (

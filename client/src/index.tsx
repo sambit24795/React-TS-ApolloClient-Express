@@ -18,6 +18,7 @@ import Signin from "./components/Auth/Signin";
 import Signup from "./components/Auth/Signup";
 import withSession, { RefetchProp } from "./components/Hoc/withSession";
 import Navbar from "./components/Navbar/Navbar";
+import Search from "./components/Search/Search";
 
 const httpLink: HttpLink = new HttpLink({
   uri: "http://localhost:4000/graphql",
@@ -52,15 +53,16 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
 
 interface Props extends RefetchProp {}
 
-const Root: React.FC<Props> = ({ refetch }): JSX.Element => (
+const Root: React.FC<Props> = ({ refetch, userData }): JSX.Element => (
   <BrowserRouter>
-    <Navbar />
+    <Navbar refetch={refetch} userData={userData} />
     <Switch>
+      <Route path="/" exact component={App} />
       <Route path="/signin" exact render={() => <Signin refetch={refetch} />} />
       <Route path="/signup" exact render={() => <Signup refetch={refetch} />} />
-      <Route path="/" exact component={App} />
+      <Route path="/search" exact render={() => <Search refetch={refetch} />} />
       <Redirect to="/" />
-    </Switch>
+    </Switch>     
   </BrowserRouter>
 );
 
