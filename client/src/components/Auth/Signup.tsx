@@ -104,6 +104,7 @@ const Signup: React.FC<Props> = ({ history, refetch }): JSX.Element => {
 
     localStorage.clear();
     localStorage.setItem("token", data?.signupUser?.token as string);
+    console.log(data);
 
     if (data) {
       await refetch();

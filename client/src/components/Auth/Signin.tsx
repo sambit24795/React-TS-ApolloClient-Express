@@ -58,7 +58,7 @@ const Signin = ({ history, refetch }: Props): JSX.Element => {
   ];
 
   const validateForm = (): boolean => {
-    if (password || !email) {
+    if (!password || !email) {
       return false;
     }
     return true;
@@ -118,7 +118,7 @@ const Signin = ({ history, refetch }: Props): JSX.Element => {
             variant="outlined"
             color="primary"
             onClick={submitHandler}
-            disabled={loading || validateForm()}
+            disabled={loading || !validateForm()}
           >
             Submit
           </Button>
