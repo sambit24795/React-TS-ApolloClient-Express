@@ -20,3 +20,7 @@ exports.addRecipe = ({
 exports.getRecipes = () => {
   return Recipe.find();
 };
+
+exports.getRecipe = (_id) => {
+  return Recipe.findById(_id);
+};

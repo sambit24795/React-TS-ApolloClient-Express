@@ -30,7 +30,7 @@ const authMiddleware: ApolloLink = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   operation.setContext({
     headers: {
-      authorization: localStorage.getItem("token") || null,
+      authorization: localStorage.getItem("token"),
     },
   });
   return forward(operation);
@@ -74,11 +74,9 @@ const Root: React.FC<Props> = ({ refetch, userData, client }): JSX.Element => (
 const RootWithSession: React.ReactType = withSession(Root);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
-      <RootWithSession />
-    </ApolloProvider>
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <RootWithSession />
+  </ApolloProvider>,
   document.getElementById("root")
 );
 

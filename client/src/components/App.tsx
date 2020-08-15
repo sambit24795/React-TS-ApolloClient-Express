@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import Button from "@material-ui/core/Button";
 
 import "./App.css";
 import { useRecipiesQuery } from "../generated/graphql";
@@ -7,7 +6,6 @@ import Recipe from "./Recipe/Recipes";
 
 const App: React.FC = (): JSX.Element => {
   const { loading, error, data } = useRecipiesQuery();
-  console.log(data);
 
   const renderData = (): ReactNode => {
     if (loading) {

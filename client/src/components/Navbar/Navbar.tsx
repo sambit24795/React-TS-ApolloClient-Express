@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { withRouter, NavLink, RouteComponentProps } from "react-router-dom";
-import { AppBar, Toolbar, IconButton, Tooltip } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import SearchIcon from "@material-ui/icons/Search";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -18,19 +18,10 @@ const Navbar: React.FC<Props> = ({
   refetch,
 }): JSX.Element => {
   const [auth, setAuth] = useState<boolean>(false);
-  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     setAuth(!!userData?.user);
   }, [userData]);
-
-  const closeHandler = () => {
-    setOpen(false);
-  };
-
-  const openHandler = () => {
-    setOpen(true);
-  };
 
   const logoutHandler = async () => {
     localStorage.clear();
@@ -41,7 +32,10 @@ const Navbar: React.FC<Props> = ({
 
   return (
     <div>
-      <AppBar position="fixed">
+      <AppBar
+        position="fixed"
+        color="transparent"
+      >
         <Toolbar className="Navbar spaceEven">
           <div className="Navbar box">
             <NavLink exact to="/" activeClassName="active">
@@ -57,30 +51,15 @@ const Navbar: React.FC<Props> = ({
           </div>
           <div className="Navbar box">
             {auth ? (
-              <Tooltip
-                open={open}
-                onClose={closeHandler}
-                onOpen={openHandler}
-                title="Signout"
-              >
-                <IconButton color="inherit" onClick={logoutHandler}>
-                  <ExitToAppIcon />
-                </IconButton>
-              </Tooltip>
+              <IconButton color="inherit" onClick={logoutHandler}>
+                <ExitToAppIcon />
+              </IconButton>
             ) : (
-              <Tooltip
-                open={open}
-                onClose={closeHandler}
-                onOpen={openHandler}
-                title="Signin"
-              >
-                <NavLink to="/signin" activeClassName="active" exact>
-                  <AccountCircle />
-                </NavLink>
-              </Tooltip>
+              <NavLink to="/signin" activeClassName="active" exact>
+                <AccountCircle />
+              </NavLink>
             )}
           </div>
-
         </Toolbar>
       </AppBar>
     </div>

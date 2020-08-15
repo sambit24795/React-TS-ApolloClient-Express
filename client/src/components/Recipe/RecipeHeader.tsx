@@ -1,33 +1,32 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, CardMedia } from "@material-ui/core";
+import { CardMedia, IconButton, CardHeader, Avatar } from "@material-ui/core";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
 
-const useStyles = makeStyles({
-  media: {
-    height: "500px",
-    width: "100%",
-  },
-  content: {
-    backgroundColor: "#CDBDAE",
-    color: "#1F1F1F",
-  },
-});
+import "./RecipeHeader.css";
 
 const RecipeHeader = (): JSX.Element => {
-  const classes = useStyles();
+  const history = useHistory();
+
+  const clickhandler = () => {
+    history.push({
+      pathname: "/recipe/add",
+    });
+  };
 
   return (
     <Card className="CardBackdrop">
       <CardActionArea>
         <CardMedia
-          className={classes.media}
+          className="Header media"
           image="https://bar-b.nl/wp-content/uploads/2017/12/Burger-n-Beer.jpg"
           title="Burgers and Beers"
         />
-        <CardContent className={classes.content}>
+        <CardContent className="Header content">
           <Typography gutterBottom variant="h5" component="h2">
             Burgers and Beers
           </Typography>
@@ -39,6 +38,16 @@ const RecipeHeader = (): JSX.Element => {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardHeader
+        className="Header icon"
+        avatar={<Avatar className="Header avatar">U</Avatar>}
+        title=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi quae "
+        action={
+          <IconButton color="inherit" onClick={clickhandler}>
+            <FastfoodIcon fontSize="large" />
+          </IconButton>
+        }
+      />
     </Card>
   );
 };

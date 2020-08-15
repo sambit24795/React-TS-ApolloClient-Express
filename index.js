@@ -20,7 +20,7 @@ app.use(
 //* jwt varification
 app.use(async (req, res, next) => {
   const token = req.headers["authorization"];
-  if (token !== "null") {
+  if (token !== "null" || "undefined") {
     try {
       const currUser = await jwt.verify(token, process.env.SECRET_KEY);
       req.currentUser = currUser;

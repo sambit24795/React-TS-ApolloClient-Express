@@ -7,3 +7,22 @@ query Recipies {
     description
   }
 }
+
+query Recipe($_id:ID!){
+  recipe(_id: $_id) {
+    _id
+    name
+    category
+    description
+  }
+}
+
+mutation AddRecipe($input: AddRecipeInput) {
+  addRecipe(input: $input){
+    name
+    category
+    description
+    instructions
+    createdDate
+  }
+}
