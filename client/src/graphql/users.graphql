@@ -1,8 +1,13 @@
 query currentUser {
-  user{
-    userName,
-  	email,
+  user {
+    userName
+    email
     joinDate
+    favorites {
+      name
+      category
+      description
+    }
   }
 }
 

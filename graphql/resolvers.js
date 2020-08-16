@@ -3,6 +3,7 @@ const {
   getRecipes,
   getRecipe,
   getSearchedRecipes,
+  postLikedRecipe,
 } = require("../controllers/recipe");
 const {
   signupUser,
@@ -54,13 +55,16 @@ const Mutation = {
     }
   },
   SigninUser: async (_, { input }, context) => {
-    console.log("CONTEXT:", context);
     try {
       const token = await signinUser(input);
       return { token };
     } catch (err) {
       console.error(err);
     }
+  },
+  likeRecipe: async (...[, { input: { _id, userName, flag} }]) => {
+    console.log(_id, userName);
+    return await postLikedRecipe(_id, userName, flag);
   },
 };
 

@@ -1,4 +1,5 @@
 const Recipe = require("../Models/Recipe");
+const User = require("../Models/User");
 
 exports.addRecipe = ({
   name,
@@ -37,4 +38,17 @@ exports.getSearchedRecipes = (searchTerm) => {
     ).sort({ score: { $meta: "textScore" } });
   }
   return Recipe.find().sort({ likes: "desc", createdDate: "desc" });
+};
+
+exports.postLikedRecipe = async (_id, userName, flag) => {
+  let recipe;
+
+  if (flag) {
+    recipe = await Recipe.findOneAndUpdate({ _id }, { $set: { likes: 1 } });
+  } else {
+    recipe = await Recipe.findOneAndUpdate({ _id }, { $set: { likes: 0 } });
+  }
+
+  await User.findOneAndUpdate({ userName }, { $addToSet: { favorites: _id } });
+  return recipe;
 };

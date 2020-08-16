@@ -29,7 +29,7 @@ const RecipeSchema = new Schema({
   },
 
   likes: {
-    type: String,
+    type: Number,
     default: 0,
   },
 

@@ -40,7 +40,13 @@ const RecipeHeader = (): JSX.Element => {
       </CardActionArea>
       <CardHeader
         className="Header icon"
-        avatar={<Avatar className="Header avatar">U</Avatar>}
+        avatar={
+          <Avatar
+            className="Header avatar"
+            alt="Burgers and Fries"
+            src="https://media-cdn.tripadvisor.com/media/photo-s/17/ba/a6/31/burger.jpg"
+          />
+        }
         title=" Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi quae "
         action={
           <IconButton color="inherit" onClick={clickhandler}>

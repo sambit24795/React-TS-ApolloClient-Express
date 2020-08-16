@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { useRecipeQuery } from "../../../generated/graphql";
+import {
+  useRecipeQuery,
+  useLikeRecipeMutation,
+} from "../../../generated/graphql";
 import {
   makeStyles,
   Theme,
@@ -24,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       maxWidth: "345",
-      
+
       backgroundColor: "#333",
       color: "#fff",
     },
     media: {
-      height:0,
+      height: 0,
       paddingTop: "38.25%", // 16:9
     },
     header: {
@@ -46,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const SingleRecipe: React.FC<Props> = ({ match: { params } }): JSX.Element => {
   const classes = useStyles();
+  const [like, setLike] = useState<boolean>(false);
 
   const { data } = useRecipeQuery({
     variables: {
@@ -53,7 +57,25 @@ const SingleRecipe: React.FC<Props> = ({ match: { params } }): JSX.Element => {
     },
   });
 
-  console.log(data);
+  const [likeRecipe] = useLikeRecipeMutation();
+
+  useEffect(() => {
+    setLike(data?.recipe?.likes === 1);
+    console.log(data?.recipe?.likes);
+  }, [data]);
+
+  const likeHandler = async () => {
+    setLike(!like);
+    await likeRecipe({
+      variables: {
+        input: {
+          _id: data?.recipe?._id as string,
+          userName: data?.recipe?.userName as string,
+          flag: like,
+        },
+      },
+    });
+  };
 
   return (
     <React.Fragment>
@@ -63,22 +85,21 @@ const SingleRecipe: React.FC<Props> = ({ match: { params } }): JSX.Element => {
             className={classes.media}
             image="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/RedDot_Burger.jpg/1200px-RedDot_Burger.jpg"
             title="Some dish"
-            
           />
           <CardHeader
             className={classes.header}
             avatar={
               <Avatar aria-label="recipe" className={classes.avatar}>
-                R
+                {data?.recipe?.userName?.split("")[0].toUpperCase()}
               </Avatar>
             }
             action={
-              <IconButton aria-label="settings" color="inherit">
-                <FavoriteIcon />
+              <IconButton aria-label="settings" onClick={likeHandler}>
+                <FavoriteIcon style={{ color: like ? "#FA4B00" : "inherit" }} />
               </IconButton>
             }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
+            title={data?.recipe?.userName}
+            subheader={"September 14, 2016"}
           />
           <CardContent>
             <Typography variant="body2" color="inherit" component="p">

@@ -70,7 +70,7 @@ const AddRecipe: React.FC<Props> = ({ userData }): JSX.Element => {
 
   const { category, description, name, instructions, userName } = state;
 
-  const [addRecipe, { error, loading }] = useAddRecipeMutation();
+  const [addRecipe, { error, loading, client }] = useAddRecipeMutation();
 
   useEffect(() => {
     if (!!userData?.user === false) {
@@ -109,8 +109,9 @@ const AddRecipe: React.FC<Props> = ({ userData }): JSX.Element => {
           userName,
         },
       },
-    });
+    }, );
     console.log("DATA", data);
+    console.log(client);
     if (data) {
       dispatch({
         type: CLEAR_FIELD,

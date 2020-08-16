@@ -45,7 +45,7 @@ const Search: React.FC<Props> = (): JSX.Element => {
           label="Search"
           variant="outlined"
           onChange={searchedResults}
-          helperText="please eneter at least 3 characters"
+          helperText="please enter at least 3 characters"
         />
       </div>
       <Container>

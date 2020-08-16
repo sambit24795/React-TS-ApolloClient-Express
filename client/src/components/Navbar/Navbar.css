@@ -17,6 +17,10 @@
     color: #fff;
 }
 
+.Navbar.box button {
+    color: #fff;
+}
+
 .Navbar.box a.active {
     color: #FA4B00;
 }

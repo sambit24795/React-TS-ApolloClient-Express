@@ -59,6 +59,7 @@ export type Mutation = {
   addRecipe?: Maybe<Recipe>;
   signupUser?: Maybe<Token>;
   SigninUser?: Maybe<Token>;
+  likeRecipe?: Maybe<Recipe>;
 };
 
 
@@ -74,6 +75,11 @@ export type MutationSignupUserArgs = {
 
 export type MutationSigninUserArgs = {
   input?: Maybe<SigninUserInput>;
+};
+
+
+export type MutationLikeRecipeArgs = {
+  input?: Maybe<LikeRecipeInput>;
 };
 
 export type AddRecipeInput = {
@@ -98,6 +104,12 @@ export type Token = {
 export type SigninUserInput = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type LikeRecipeInput = {
+  _id: Scalars['ID'];
+  userName: Scalars['String'];
+  flag?: Maybe<Scalars['Boolean']>;
 };
 
 export enum CacheControlScope {
@@ -126,7 +138,7 @@ export type RecipeQuery = (
   { __typename?: 'Query' }
   & { recipe?: Maybe<(
     { __typename?: 'Recipe' }
-    & Pick<Recipe, '_id' | 'name' | 'category' | 'description'>
+    & Pick<Recipe, '_id' | 'name' | 'category' | 'description' | 'userName' | 'createdDate' | 'likes'>
   )> }
 );
 
@@ -156,6 +168,19 @@ export type AddRecipeMutation = (
   )> }
 );
 
+export type LikeRecipeMutationVariables = Exact<{
+  input?: Maybe<LikeRecipeInput>;
+}>;
+
+
+export type LikeRecipeMutation = (
+  { __typename?: 'Mutation' }
+  & { likeRecipe?: Maybe<(
+    { __typename?: 'Recipe' }
+    & Pick<Recipe, 'name' | 'category' | 'description' | 'instructions'>
+  )> }
+);
+
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -164,6 +189,10 @@ export type CurrentUserQuery = (
   & { user?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'userName' | 'email' | 'joinDate'>
+    & { favorites?: Maybe<Array<Maybe<(
+      { __typename?: 'Recipe' }
+      & Pick<Recipe, 'name' | 'category' | 'description'>
+    )>>> }
   )> }
 );
 
@@ -237,6 +266,9 @@ export const RecipeDocument = gql`
     name
     category
     description
+    userName
+    createdDate
+    likes
   }
 }
     `;
@@ -338,12 +370,52 @@ export function useAddRecipeMutation(baseOptions?: ApolloReactHooks.MutationHook
 export type AddRecipeMutationHookResult = ReturnType<typeof useAddRecipeMutation>;
 export type AddRecipeMutationResult = ApolloReactCommon.MutationResult<AddRecipeMutation>;
 export type AddRecipeMutationOptions = ApolloReactCommon.BaseMutationOptions<AddRecipeMutation, AddRecipeMutationVariables>;
+export const LikeRecipeDocument = gql`
+    mutation LikeRecipe($input: LikeRecipeInput) {
+  likeRecipe(input: $input) {
+    name
+    category
+    description
+    instructions
+  }
+}
+    `;
+export type LikeRecipeMutationFn = ApolloReactCommon.MutationFunction<LikeRecipeMutation, LikeRecipeMutationVariables>;
+
+/**
+ * __useLikeRecipeMutation__
+ *
+ * To run a mutation, you first call `useLikeRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeRecipeMutation, { data, loading, error }] = useLikeRecipeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLikeRecipeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LikeRecipeMutation, LikeRecipeMutationVariables>) {
+        return ApolloReactHooks.useMutation<LikeRecipeMutation, LikeRecipeMutationVariables>(LikeRecipeDocument, baseOptions);
+      }
+export type LikeRecipeMutationHookResult = ReturnType<typeof useLikeRecipeMutation>;
+export type LikeRecipeMutationResult = ApolloReactCommon.MutationResult<LikeRecipeMutation>;
+export type LikeRecipeMutationOptions = ApolloReactCommon.BaseMutationOptions<LikeRecipeMutation, LikeRecipeMutationVariables>;
 export const CurrentUserDocument = gql`
     query currentUser {
   user {
     userName
     email
     joinDate
+    favorites {
+      name
+      category
+      description
+    }
   }
 }
     `;

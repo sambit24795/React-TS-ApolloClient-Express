@@ -9,6 +9,7 @@ type Mutation {
   addRecipe(input: AddRecipeInput): Recipe
   signupUser(input: SignupUserInput): Token
   SigninUser(input: SigninUserInput): Token
+  likeRecipe(input: LikeRecipeInput): Recipe
 }
 
 type Recipe {
@@ -52,4 +53,10 @@ input SignupUserInput {
 input SigninUserInput {
   email: String!
   password: String!
+}
+
+input LikeRecipeInput {
+  _id: ID!
+  userName: String!
+  flag: Boolean
 }

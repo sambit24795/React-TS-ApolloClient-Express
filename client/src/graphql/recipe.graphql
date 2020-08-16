@@ -8,17 +8,20 @@ query Recipies {
   }
 }
 
-query Recipe($_id:ID!){
+query Recipe($_id: ID!) {
   recipe(_id: $_id) {
     _id
     name
     category
     description
+    userName
+    createdDate
+    likes
   }
 }
 
-query SearchedRecipe($searchTerm: String){
-  searchedRecipe(searchTerm: $searchTerm){
+query SearchedRecipe($searchTerm: String) {
+  searchedRecipe(searchTerm: $searchTerm) {
     _id
     name
     category
@@ -27,11 +30,20 @@ query SearchedRecipe($searchTerm: String){
 }
 
 mutation AddRecipe($input: AddRecipeInput) {
-  addRecipe(input: $input){
+  addRecipe(input: $input) {
     name
     category
     description
     instructions
     createdDate
+  }
+}
+
+mutation LikeRecipe($input: LikeRecipeInput) {
+  likeRecipe(input: $input) {
+    name
+    category
+    description
+    instructions
   }
 }
