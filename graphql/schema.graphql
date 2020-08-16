@@ -2,6 +2,7 @@ type Query {
   recipies: [Recipe]
   user: User
   recipe(_id: ID!): Recipe
+  searchedRecipe(searchTerm: String): [Recipe]
 }
 
 type Mutation {

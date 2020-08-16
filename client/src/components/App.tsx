@@ -4,7 +4,7 @@ import "./App.css";
 import { useRecipiesQuery } from "../generated/graphql";
 import Recipe from "./Recipe/Recipes";
 
-const App: React.FC = (): JSX.Element => {
+const App = (): JSX.Element => {
   const { loading, error, data } = useRecipiesQuery();
 
   const renderData = (): ReactNode => {
@@ -20,7 +20,8 @@ const App: React.FC = (): JSX.Element => {
           <Button variant="contained" color="primary">{recipe?.userName}</Button>
         </div>
       )); */
-      return data && <Recipe data={data}/>;
+      console.log("Recipe Data", data?.recipies);
+      return data && <Recipe data={data.recipies} />;
     }
   };
 

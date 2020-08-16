@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import {
   FormGroup,
   FormControl,
@@ -15,20 +15,23 @@ import { Alert } from "@material-ui/lab";
 import "./AddRecipe.css";
 import { useAddRecipeMutation } from "../../../generated/graphql";
 import Footer from "../../Footer/Footer";
+import { useHistory } from "react-router-dom";
+import { RefetchProp } from "../../Hoc/withSession";
 
 const FIELD_CHANGE = "FIELD_CHNAGE";
 const CLEAR_FIELD = "CLEAR_FIELD";
+const UPDATE_USERNAME = "UPDATE_USERNAME";
 
 interface RecipeState {
   name: string;
   description: string;
   category: string;
   instructions: string;
-  userName: string;
+  userName: string | undefined;
 }
 
 interface RecipeActions {
-  type: typeof FIELD_CHANGE | typeof CLEAR_FIELD;
+  type: typeof FIELD_CHANGE | typeof CLEAR_FIELD | typeof UPDATE_USERNAME;
   field?: string;
   payload?: string;
 }
@@ -47,22 +50,42 @@ const addRecipeReducer = (state: RecipeState, action: RecipeActions) => {
       return { ...state, [action.field as string]: action.payload };
     case CLEAR_FIELD:
       return { ...state, ...initialState };
+    case UPDATE_USERNAME:
+      return { ...state, userName: action.payload };
     default:
       return state;
   }
 };
 
-const AddRecipe = (): JSX.Element => {
+type OmmitedRefetch = Omit<RefetchProp, "refetch">;
+
+interface Props extends OmmitedRefetch {}
+
+const AddRecipe: React.FC<Props> = ({ userData }): JSX.Element => {
   const [state, dispatch] = useReducer<
     React.Reducer<RecipeState, RecipeActions>
   >(addRecipeReducer, initialState);
 
-  const { userName, category, description, name, instructions } = state;
+  const history = useHistory();
+
+  const { category, description, name, instructions, userName } = state;
 
   const [addRecipe, { error, loading }] = useAddRecipeMutation();
 
+  useEffect(() => {
+    if (!!userData?.user === false) {
+      history.push({
+        pathname: "/",
+      });
+    }
+    dispatch({
+      type: UPDATE_USERNAME,
+      payload: userData?.user?.userName,
+    });
+  }, [userData, history]);
+
   const validateForm = (): boolean => {
-    if (!userName || !category || !description || !name || !instructions) {
+    if (!category || !description || !name || !instructions) {
       return false;
     }
     return true;
@@ -92,6 +115,7 @@ const AddRecipe = (): JSX.Element => {
       dispatch({
         type: CLEAR_FIELD,
       });
+      history.push({ pathname: "/" });
     }
   };
 
@@ -117,11 +141,11 @@ const AddRecipe = (): JSX.Element => {
               <InputLabel>Username</InputLabel>
               <Input
                 name="userName"
-                value={userName}
+                value={userData?.user?.userName}
                 placeholder="user name"
-                onChange={changeHandler}
+                disabled
               />
-              <FormHelperText>Please enter a username.</FormHelperText>
+              <FormHelperText>Please don't change the userName</FormHelperText>
             </FormControl>
 
             <FormControl>

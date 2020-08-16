@@ -63,7 +63,11 @@ const Root: React.FC<Props> = ({ refetch, userData, client }): JSX.Element => (
       <Route path="/signin" exact render={() => <Signin refetch={refetch} />} />
       <Route path="/signup" exact render={() => <Signup refetch={refetch} />} />
       <Route path="/search" exact render={() => <Search refetch={refetch} />} />
-      <Route path="/recipe/add" exact render={() => <AddRecipe />} />
+      <Route
+        path="/recipe/add"
+        exact
+        render={() => <AddRecipe userData={userData} />}
+      />
       <Route path="/recipe/:_id" exact render={() => <SingleRecipe />} />
       <Redirect to="/" />
       <Redirect to="/" />
@@ -74,9 +78,11 @@ const Root: React.FC<Props> = ({ refetch, userData, client }): JSX.Element => (
 const RootWithSession: React.ReactType = withSession(Root);
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <RootWithSession />
-  </ApolloProvider>,
+  <React.StrictMode>
+    <ApolloProvider client={client}>
+      <RootWithSession />
+    </ApolloProvider>
+  </React.StrictMode>,
   document.getElementById("root")
 );
 

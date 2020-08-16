@@ -17,6 +17,15 @@ query Recipe($_id:ID!){
   }
 }
 
+query SearchedRecipe($searchTerm: String){
+  searchedRecipe(searchTerm: $searchTerm){
+    _id
+    name
+    category
+    description
+  }
+}
+
 mutation AddRecipe($input: AddRecipeInput) {
   addRecipe(input: $input){
     name

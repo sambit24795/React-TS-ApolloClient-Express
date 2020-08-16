@@ -19,11 +19,17 @@ export type Query = {
   recipies?: Maybe<Array<Maybe<Recipe>>>;
   user?: Maybe<User>;
   recipe?: Maybe<Recipe>;
+  searchedRecipe?: Maybe<Array<Maybe<Recipe>>>;
 };
 
 
 export type QueryRecipeArgs = {
   _id: Scalars['ID'];
+};
+
+
+export type QuerySearchedRecipeArgs = {
+  searchTerm?: Maybe<Scalars['String']>;
 };
 
 export type Recipe = {
@@ -122,6 +128,19 @@ export type RecipeQuery = (
     { __typename?: 'Recipe' }
     & Pick<Recipe, '_id' | 'name' | 'category' | 'description'>
   )> }
+);
+
+export type SearchedRecipeQueryVariables = Exact<{
+  searchTerm?: Maybe<Scalars['String']>;
+}>;
+
+
+export type SearchedRecipeQuery = (
+  { __typename?: 'Query' }
+  & { searchedRecipe?: Maybe<Array<Maybe<(
+    { __typename?: 'Recipe' }
+    & Pick<Recipe, '_id' | 'name' | 'category' | 'description'>
+  )>>> }
 );
 
 export type AddRecipeMutationVariables = Exact<{
@@ -247,6 +266,42 @@ export function useRecipeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookO
 export type RecipeQueryHookResult = ReturnType<typeof useRecipeQuery>;
 export type RecipeLazyQueryHookResult = ReturnType<typeof useRecipeLazyQuery>;
 export type RecipeQueryResult = ApolloReactCommon.QueryResult<RecipeQuery, RecipeQueryVariables>;
+export const SearchedRecipeDocument = gql`
+    query SearchedRecipe($searchTerm: String) {
+  searchedRecipe(searchTerm: $searchTerm) {
+    _id
+    name
+    category
+    description
+  }
+}
+    `;
+
+/**
+ * __useSearchedRecipeQuery__
+ *
+ * To run a query within a React component, call `useSearchedRecipeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchedRecipeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchedRecipeQuery({
+ *   variables: {
+ *      searchTerm: // value for 'searchTerm'
+ *   },
+ * });
+ */
+export function useSearchedRecipeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SearchedRecipeQuery, SearchedRecipeQueryVariables>) {
+        return ApolloReactHooks.useQuery<SearchedRecipeQuery, SearchedRecipeQueryVariables>(SearchedRecipeDocument, baseOptions);
+      }
+export function useSearchedRecipeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SearchedRecipeQuery, SearchedRecipeQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SearchedRecipeQuery, SearchedRecipeQueryVariables>(SearchedRecipeDocument, baseOptions);
+        }
+export type SearchedRecipeQueryHookResult = ReturnType<typeof useSearchedRecipeQuery>;
+export type SearchedRecipeLazyQueryHookResult = ReturnType<typeof useSearchedRecipeLazyQuery>;
+export type SearchedRecipeQueryResult = ApolloReactCommon.QueryResult<SearchedRecipeQuery, SearchedRecipeQueryVariables>;
 export const AddRecipeDocument = gql`
     mutation AddRecipe($input: AddRecipeInput) {
   addRecipe(input: $input) {

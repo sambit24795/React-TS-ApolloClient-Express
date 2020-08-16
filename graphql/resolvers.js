@@ -1,4 +1,9 @@
-const { addRecipe, getRecipes, getRecipe } = require("../controllers/recipe");
+const {
+  addRecipe,
+  getRecipes,
+  getRecipe,
+  getSearchedRecipes,
+} = require("../controllers/recipe");
 const {
   signupUser,
   signinUser,
@@ -26,6 +31,9 @@ const Query = {
   },
   recipe: async (...[, { _id }]) => {
     return await getRecipe(_id);
+  },
+  searchedRecipe: async (...[, { searchTerm }]) => {
+    return await getSearchedRecipes(searchTerm);
   },
 };
 

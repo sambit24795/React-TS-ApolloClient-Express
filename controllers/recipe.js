@@ -24,3 +24,17 @@ exports.getRecipes = () => {
 exports.getRecipe = (_id) => {
   return Recipe.findById(_id);
 };
+
+exports.getSearchedRecipes = (searchTerm) => {
+  if (searchTerm) {
+    return Recipe.find(
+      {
+        $text: { $search: searchTerm },
+      },
+      {
+        score: { $meta: "textScore" },
+      }
+    ).sort({ score: { $meta: "textScore" } });
+  }
+  return Recipe.find().sort({ likes: "desc", createdDate: "desc" });
+};
