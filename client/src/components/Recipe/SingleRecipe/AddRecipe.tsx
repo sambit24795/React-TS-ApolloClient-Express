@@ -13,7 +13,11 @@ import {
 import { Alert } from "@material-ui/lab";
 
 import "./AddRecipe.css";
-import { useAddRecipeMutation } from "../../../generated/graphql";
+import {
+  useAddRecipeMutation,
+  RecipiesDocument,
+  RecipiesQuery,
+} from "../../../generated/graphql";
 import Footer from "../../Footer/Footer";
 import { useHistory } from "react-router-dom";
 import { RefetchProp } from "../../Hoc/withSession";
@@ -21,6 +25,10 @@ import { RefetchProp } from "../../Hoc/withSession";
 const FIELD_CHANGE = "FIELD_CHNAGE";
 const CLEAR_FIELD = "CLEAR_FIELD";
 const UPDATE_USERNAME = "UPDATE_USERNAME";
+
+interface RecipeQueryResult {
+  recipies: [RecipiesQuery];
+}
 
 interface RecipeState {
   name: string;
@@ -109,10 +117,21 @@ const AddRecipe: React.FC<Props> = ({ userData }): JSX.Element => {
           userName,
         },
       },
-    }, );
-    console.log("DATA", data);
-    console.log(client);
+    });
+
     if (data) {
+      const recipeQueryResult = client.readQuery<RecipeQueryResult>({
+        query: RecipiesDocument,
+      });
+      client.writeQuery({
+        query: RecipiesDocument,
+        data: {
+          recipies: [
+            ...(recipeQueryResult?.recipies as Array<RecipiesQuery>),
+            data?.addRecipe,
+          ],
+        },
+      });
       dispatch({
         type: CLEAR_FIELD,
       });

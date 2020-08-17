@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { withRouter, RouteComponentProps, useHistory } from "react-router-dom";
 import {
   useRecipeQuery,
   useLikeRecipeMutation,
@@ -20,6 +20,7 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
 import Footer from "../../Footer/Footer";
+import { UserDataContext } from "../../Hoc/withSession";
 
 interface Props extends RouteComponentProps<any> {}
 
@@ -51,6 +52,9 @@ const SingleRecipe: React.FC<Props> = ({ match: { params } }): JSX.Element => {
   const classes = useStyles();
   const [like, setLike] = useState<boolean>(false);
 
+  const { userData } = useContext(UserDataContext);
+  const history = useHistory();
+
   const { data } = useRecipeQuery({
     variables: {
       _id: params?._id,
@@ -60,9 +64,14 @@ const SingleRecipe: React.FC<Props> = ({ match: { params } }): JSX.Element => {
   const [likeRecipe] = useLikeRecipeMutation();
 
   useEffect(() => {
+    if (!!userData?.user === false) {
+      history.push({
+        pathname: "/",
+      });
+    }
+
     setLike(data?.recipe?.likes === 1);
-    console.log(data?.recipe?.likes);
-  }, [data]);
+  }, [data, history, userData]);
 
   const likeHandler = async () => {
     setLike(!like);
