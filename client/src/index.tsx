@@ -23,7 +23,7 @@ import AddRecipe from "./components/Recipe/SingleRecipe/AddRecipe";
 import SingleRecipe from "./components/Recipe/SingleRecipe/SingleRecipe";
 
 const httpLink: HttpLink = new HttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: "https://react-apollo-ts-express.herokuapp.com/graphql",
 });
 
 const authMiddleware: ApolloLink = new ApolloLink((operation, forward) => {

@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const fs = require("fs");
@@ -48,7 +49,7 @@ const apolloServer = new ApolloServer({
   context: ({ req: { currentUser } }) => ({ currentUser }),
 });
 
-apolloServer.applyMiddleware({ app, path: "/graphql" });
+//apolloServer.applyMiddleware({ app, path: "/graphql" });
 
 //!connect to Database
 mongoose
@@ -58,6 +59,13 @@ mongoose
   })
   .then(() => console.log("CONECTED TO DB"))
   .catch((err) => console.error(err));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("/client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 const PORT = process.env.PORT | 4000;
 app.listen(PORT, () => {
