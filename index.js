@@ -49,7 +49,7 @@ const apolloServer = new ApolloServer({
   context: ({ req: { currentUser } }) => ({ currentUser }),
 });
 
-//apolloServer.applyMiddleware({ app, path: "/graphql" });
+apolloServer.applyMiddleware({ app, path: "/graphql" });
 
 //!connect to Database
 mongoose
